@@ -34,7 +34,7 @@ RUN apt update && \
 RUN mkdir -p /usr/local/problemtools_build
 
 WORKDIR /usr/local/problemtools_build
-RUN git clone --recursive https://github.com/kattis/problemtools
+RUN git clone --recursive https://github.com/FinnLidbetter/problemtools
 
 ARG PROBLEMTOOLS_VERSION=develop
 RUN cd problemtools && git checkout ${PROBLEMTOOLS_VERSION} && make builddeb

@@ -3,15 +3,13 @@
 #
 
 ARG PROBLEMTOOLS_VERSION=develop
-FROM problemtools/icpc:${PROBLEMTOOLS_VERSION}
-
-LABEL maintainer="austrin@kattis.com"
+FROM finnlidbetter/problemtools-arm-icpc:${PROBLEMTOOLS_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y \
-            fp-compiler \
+            #fp-compiler \ <- Fails to install on ARM
             gfortran \
             gnucobol \
             gccgo \

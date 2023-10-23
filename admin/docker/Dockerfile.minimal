@@ -12,8 +12,6 @@
 ARG PROBLEMTOOLS_VERSION=develop
 FROM ubuntu:22.04
 
-LABEL maintainer="austrin@kattis.com"
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
@@ -22,13 +20,18 @@ RUN apt update && \
         libgmpxx4ldbl \
         python-pkg-resources \
         python3-minimal \
+        python3-pip \
         python3-yaml \
         python3-plastex \
         texlive-fonts-recommended \
         texlive-lang-cyrillic \
         texlive-latex-extra \
         texlive-plain-generic \
-        tidy
+        tidy \
+        vim \
+        git
+
+RUN pip3 install plasTeX==3.0
 
 RUN mkdir -p /usr/local/artifacts
 WORKDIR /usr/local/artifacts

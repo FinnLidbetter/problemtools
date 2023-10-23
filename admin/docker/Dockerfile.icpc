@@ -3,9 +3,7 @@
 #
 
 ARG PROBLEMTOOLS_VERSION=develop
-FROM problemtools/minimal:${PROBLEMTOOLS_VERSION}
-
-LABEL maintainer="austrin@kattis.com"
+FROM finnlidbetter/problemtools-arm-minimal:${PROBLEMTOOLS_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,9 +14,15 @@ RUN apt update && \
     apt update && \
     apt install -y \
         gcc g++ \
-        openjdk-11-jdk openjdk-11-jre \
-        kotlin \
+        openjdk-17-jdk \ 
+        openjdk-17-jre \ 
         pypy3
+
+# Install Kotlin
+WORKDIR /usr/local
+COPY artifacts/kotlin/kotlinc.zip /tmp
+RUN unzip /tmp/kotlinc.zip
+RUN ln -s /usr/local/kotlinc/bin/* bin/
 
 # Reconfigure problemtools:
 # - Use PyPy for Python 2 (not available in this image but in the full one)
@@ -32,6 +36,9 @@ python2: \n\
 python3: \n\
     name: 'Python 3 w/PyPy'\n\
     run: '/usr/bin/pypy3 \"{mainfile}\"'\n\
- \n" > /etc/kattis/problemtools/languages.yaml
+ \n\
+kotlin: \n\
+    compile: '/usr/local/bin/kotlinc -d {path}/ -- {files}' \n\
+    run: '/usr/local/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xss64m -J-Xms{memlim}m -J-Xmx{memlim}m -cp {path}/ {Mainclass}Kt' " > /etc/kattis/problemtools/languages.yaml
 
 WORKDIR /
