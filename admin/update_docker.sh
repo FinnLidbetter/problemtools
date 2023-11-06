@@ -4,7 +4,7 @@ set -e
 KOTLIN_VERSION=1.7.21
 
 TAG=develop
-UPDATE_LATEST=false
+UPDATE_LATEST=true
 if [ "$1" != "" ]; then
     TAG=$1
     UPDATE_LATEST=true
