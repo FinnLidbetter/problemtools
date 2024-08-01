@@ -41,9 +41,6 @@ python2: \n\
 python3: \n\
     name: 'Python 3 w/PyPy'\n\
     run: '/usr/bin/pypy3 \"{mainfile}\"'\n\
- \n\
-kotlin: \n\
-    compile: '/usr/local/bin/kotlinc -d {path}/ -- {files}' \n\
-    run: '/usr/local/bin/kotlin -Dfile.encoding=UTF-8 -J-XX:+UseSerialGC -J-Xss64m -J-Xms{memlim}m -J-Xmx{memlim}m -cp {path}/ {Mainclass}Kt' " > /etc/kattis/problemtools/languages.yaml
+ \n" > /etc/kattis/problemtools/languages.yaml
 
 WORKDIR /

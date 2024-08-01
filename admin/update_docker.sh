@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-KOTLIN_VERSION=1.7.21
-
 TAG=develop
 UPDATE_LATEST=true
 if [ "$1" != "" ]; then
@@ -26,11 +24,6 @@ mkdir -p artifacts
 rm -rf artifacts/deb/*
 docker run --rm -v "$(pwd)/artifacts/:/artifacts" finnlidbetter/problemtools-arm-build:${TAG} cp -r /usr/local/problemtools_build/deb /artifacts
 sudo chown -R $(id -u $USER):$(id -g $USER) artifacts/
-
-# Get Kotlin since it is not available through apt
-# ===============================================
-mkdir -p artifacts/kotlin
-curl -L -o artifacts/kotlin/kotlinc.zip https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip
 
 
 # Build the actual problemtools images
