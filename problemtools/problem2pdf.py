@@ -8,15 +8,11 @@ import subprocess
 from . import template
 
 
-def convert(problem, options=None):
-    if options is None:
-        options = ConvertOptions()
-
-    problem = os.path.realpath(problem)
+def convert(options: argparse.Namespace) -> bool:
+    problem = os.path.realpath(options.problem)
     problembase = os.path.splitext(os.path.basename(problem))[0]
     destfile = string.Template(options.destfile).safe_substitute(problem=problembase)
 
-    texfile = problem
     # Set up template if necessary
     with template.Template(problem, language=options.language) as templ:
         texfile = templ.get_file_name()
@@ -47,33 +43,22 @@ def convert(problem, options=None):
 
     return status == 0
 
-
-class ConvertOptions:
-    available = [
-        ['destfile', 'store', '-o', '--output',
-         "output file name", '${problem}.pdf'],
-        ['quiet', 'store_true', '-q', '--quiet',
-         "quiet", False],
-        ['language', 'store', '-l', '--language',
-         'choose alternate language (2-letter code)', None],
-        ['nopdf', 'store_true', '-n', '--no-pdf',
-         'run pdflatex in -draftmode', False],
-        ]
-
-    def __init__(self):
-        for (dest, _, _, _, _, default) in ConvertOptions.available:
-            setattr(self, dest, default)
-
-
-def main():
+def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    for (dest, action, short, _long, _help, default) in ConvertOptions.available:
-        parser.add_argument(short, _long, dest=dest, help=_help, action=action, default=default)
+    parser.add_argument('-o', '--output', dest='destfile', help="output file name", default='${problem}.pdf')
+    parser.add_argument('-q', '--quiet', dest='quiet', action='store_true', help="quiet", default=False)
+    parser.add_argument('-l', '--language', dest='language', help='choose alternate language (2-letter code)', default=None)
+    parser.add_argument('-n', '--no-pdf', dest='nopdf', action='store_true', help='run pdflatex in -draftmode', default=False)
     parser.add_argument('problem', help='the problem to convert')
 
+    return parser
+
+
+def main() -> None:
+    parser = get_parser()
     options = parser.parse_args()
-    convert(options.problem, options)
+    convert(options)
 
 
 if __name__ == '__main__':
